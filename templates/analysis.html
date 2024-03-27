@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='output.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Function to load the chart
+      function loadChart(data) {
+          var ctx = document.getElementById('sentimentChart').getContext('2d');
+          var labels = Array.from({ length: 7 }, (_, i) => 'Entry ' + (i + 1));
+          var emotions = Object.keys(data[0][0]);
+          var datasets = [];
+
+          // Process data for each emotion
+           emotions.forEach(emotion => {
+            var emotionData = [];
+            data.forEach(batch => {
+            batch.forEach(entry => {
+                emotionData.push(entry[emotion]);
+            });
+               });
+
+        // Normalize emotion scores to a range from 0 to 100
+        var minScore = Math.min(...emotionData);
+        var maxScore = Math.max(...emotionData);
+        emotionData = emotionData.map(score => {
+            return ((score - minScore) / (maxScore - minScore)) * 100;
+        });
+
+              var dataset = {
+                  label: emotion,
+                  data: emotionData,
+                  borderColor: getRandomColor(),
+                  borderWidth: 1,
+                  fill: false
+              };
+              datasets.push(dataset);
+          });
+
+          var chartData = {
+              labels: labels,
+              datasets: datasets
+          };
+
+          var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+              scales: {
+                  y: {
+                    min:0,
+                    max:100,
+                      beginAtZero: true,
+                      ticks: {
+                        stepSize: 10, 
+                          callback: function(value, index, values) {
+                              return value + '%'; // Add percentage sign to the y-axis labels
+                          }
+                      }
+                  }
+              },
+              plugins: {
+                legend: {
+                  position: 'right', // Position the legend on the left side
+                    labels: {
+                       boxWidth: 20, // Adjust the width of legend items
+                         font: {
+                            size: 12 // Adjust the font size of legend labels
+                }
+            }
+        }
+    }
+          };
+
+          // Create the chart
+          var sentimentChart = new Chart(ctx, {
+              type: 'bar',
+              data: chartData,
+              options: chartOptions
+          });
+      }
+
+      // Fetch weekly analysis data from server
+      fetch('/weekly_analysis')
+          .then(response => response.json())
+          .then(data => loadChart(data))
+          .catch(error => console.error('Error loading data:', error));
+
+      // Function to generate random color
+      function getRandomColor() {
+          var letters = '0123456789ABCDEF';
+          var color = '#';
+          for (var i = 0; i < 6; i++) {
+              color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color;
+      }
+  </script>
+  <style>
+    .chart-container {
+    width: 800px; /* Adjust the width as needed */
+    height: 600px; /* Adjust the height as needed */
+}
+  </style>
+    
+</head>
+
+<body class="bg-bgcolor font-helvetica">
+    <div>
+      <nav class="bg-pink p-4">
+        <div class="container mx-auto flex justify-between">
+          <!-- Logo -->
+          <div>
+            <a href="#" class="text-white font-bold text-3xl">ThoughtTracker</a>
+          </div>
+          <!-- Navigation Links -->
+          <div class="flex space-x-16">
+            <a href="home" class="text-white hover:text-yellow font-bold text-2xl" >Home</a>
+            <a href="analysis" class="text-white hover:text-yellow font-bold text-2xl">Analysis</a>
+            <a href="previous" class="text-white hover:text-yellow font-bold text-2xl">Previous Entries</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    
+        <div class = "mx-auto">
+            <div class="mb-16"></div>
+            <div class="text-center bg-blue text-black p-4 ml-32 rounded-full w-64 h-22">
+                <p class="text-3xl">HI,</p>
+            </div>
+            <p class="text-5xl mt-10 pt-10 pl-20 text-center">Your weekly analysis is Ready!</p>
+        </div>
+
+      <div class="pt-32 pl-32">
+        <form class="w-full max-w-sm">
+        <div class="mb-6">
+            <div>
+                <label class="text-3xl text-gray-500 md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+                    Your Result:
+                </label>
+            </div>
+             
+            <div class="chart-container">
+                <canvas id="sentimentChart" width="800" height="400"></canvas>
+              </div>
+             
+        </div>
+      
+        </form>
+    
+             
+</body>
+</html>
