@@ -14,26 +14,25 @@ Export and Reporting: Generate reports summarizing sentiment analysis results, p
 
 Installation:
 
-Clone the repository:
+1. Clone the repository:
 
-bash
 Copy code
 git clone <repository_url>
-Install dependencies:
 
-bash
+2. Install dependencies:
+
 Copy code
 pip install -r requirements.txt
-Run the application:
 
-bash
+3. Run the application:
+   
 Copy code
 python app.py
-Access the application in your web browser at http://localhost:5000
+
+4. Access the application in your web browser at http://localhost:5000
 
 
 Usage:
-
 Register for an account using a valid email address and password.
 Log in to your account.
 Start journaling by creating new entries.
@@ -43,18 +42,18 @@ Export and generate reports to summarize sentiment analysis results.
 
 
 Contributing:
-
 Contributions to the eMental Wellbeing project are welcome! If you encounter any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request.
 
-Credits:
 
+Credits:
 This project utilizes the BERT model from the Hugging Face Transformers library.
 Special thanks to the developers and contributors of Flask, Chart.js, and other open-source libraries used in this project.
-License:
 
+
+License:
 This project is licensed under the MIT License. See the LICENSE file for more information.
 
-Contact:
 
+Contact:
 For any inquiries or support, please contact [grishmasht17@gmail.com].
 
