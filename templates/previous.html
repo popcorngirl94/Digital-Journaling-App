@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='output.css') }}">
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 0;
+      }
+      h1 {
+          text-align: center;
+          margin-top: 20px;
+          color: #333;
+      }
+      table {
+          margin: auto;
+          border-collapse: collapse;
+          width: 80%;
+          background-color: #fff;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      }
+      th, td {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 12px;
+      }
+      th {
+          background-color: #f2f2f2;
+          font-weight: bold;
+      }
+      tr:nth-child(even) {
+          background-color: #f9f9f9;
+      }
+      tr:hover {
+          background-color: #f2f2f2;
+      }
+  </style>
+</head>
+
+<body class="bg-bgcolor font-helvetica">
+    <div>
+      <nav class="bg-pink p-4">
+        <div class="container mx-auto flex justify-between">
+          <!-- Logo -->
+          <div>
+            <a href="#" class="text-white font-bold text-3xl">ThoughtTracker</a>
+          </div>
+          <!-- Navigation Links -->
+          <div class="flex space-x-16">
+            <a href="home" class="text-white hover:text-yellow font-bold text-2xl" >Home</a>
+            <a href="analysis" class="text-white hover:text-yellow font-bold text-2xl">Analysis</a>
+            <a href="previous" class="text-white hover:text-yellow font-bold text-2xl">Previous Entries</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="grid grid-cols-2 divide-x divide-none">
+        <div class = "mx-auto">
+            <div class="mb-16"></div>
+            <div class="text-center bg-blue text-black p-4 ml-32 rounded-full w-64 h-22">
+                <p class="text-3xl">HI,</p>
+            </div>
+            <p class="text-3xl mt-10 pt-10 pl-20 text-center">Previous Journal Entries</p> 
+            
+                <table>
+                  <thead>
+                      <tr>
+                          <th>ID</th>
+                          <th>Journal Text</th>
+                         
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for entry in entries %} <!--Jinja, a control statement-->
+                      <tr>
+                          <td>{{ entry[0] }}</td>  <!-- Assuming 'id' is the first column -->
+                          <td>{{ entry[1] }}</td>  <!-- Assuming 'journal_text' is the second column -->
+                           <!-- Assuming 'sentiments' is the third column -->
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+           
+            </div>
+        <div class="pt-32 pl-32">
+            
+              <img class="object-contain h-48 w-96 mx-auto" src="{{ url_for('static', filename='fun1.png') }}" alt="Example Image">
+            </div>
+            
+
+       
+    </body>
+    </html>
+    

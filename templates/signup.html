@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: url('resources/peachy.jpg') center/cover no-repeat;
+      background: linear-gradient(rgba(243, 196, 140, 0.5), rgb(235, 124, 164, 0.5)), url('resources/peachy.jpg') center/cover no-repeat;
+    }
+
+    .bg-overlay {
+      backdrop-filter: blur(5px);
+    }
+
+    .error-message {
+      color: #EF4444;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-overlay h-screen flex items-center justify-center">
+    <div class="bg-white bg-opacity-30 p-8 rounded-lg shadow-md w-full max-w-md">
+      <h2 class="text-2xl font-semibold mb-4">Create an account</h2>
+
+      <!-- Sign Up Form -->
+      <form id="signup-form" action="/signup" method="post" onsubmit="return validateForm()">
+        <!-- Email Input -->
+        <div class="mb-4">
+          <label for="email" class="block text-sm font-medium text-gray-600">Email</label>
+          <input type="email" id="email" name="email" class="mt-1 p-2 w-full border rounded-md">
+          <p id="email-error" class="error-message hidden">Email already exists</p> <!-- Error message for email -->
+        </div>
+
+        <!-- Password Input -->
+        <div class="mb-4">
+          <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
+          <input type="password" id="password" name="password" class="mt-1 p-2 w-full border rounded-md">
+        </div>
+
+        <!-- Confirm Password Input -->
+        <div class="mb-6">
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-600">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" class="mt-1 p-2 w-full border rounded-md">
+          <p id="password-match-error" class="error-message hidden">Passwords do not match</p> <!-- Error message for password mismatch -->
+        </div>
+
+        <!-- Sign Up Button -->
+        <button type="submit" class="bg-gradient-to-r from-yellow-100 via-rose-100 to-pink-500 text-white p-2 rounded-md w-full">Sign Up</button>
+
+        <!-- Login Link -->
+        <p class="mt-4 text-sm text-gray-600 text-center">
+          Already have an account? <a href="/login" class="text-pink-500">Login</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function validateForm() {
+      var email = document.getElementById("email").value;
+      var password = document.getElementById("password").value;
+      var confirmPassword = document.getElementById("confirmPassword").value;
+      var emailError = document.getElementById("email-error");
+      var passwordMatchError = document.getElementById("password-match-error");
+
+      // Validate email format
+      if (!email.includes("@")) {
+        emailError.classList.remove("hidden");
+        return false;
+      } else {
+        emailError.classList.add("hidden");
+      }
+
+      // Validate password match
+      if (password !== confirmPassword) {
+        passwordMatchError.classList.remove("hidden");
+        return false;
+      } else {
+        passwordMatchError.classList.add("hidden");
+      }
+
+      return true; // Allow form submission
+    }
+  </script>
+</body>
+
+</html>

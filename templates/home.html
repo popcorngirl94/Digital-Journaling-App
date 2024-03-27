@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='output.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+       $(document).ready(function(){
+            var emotionChart; // Declare a variable for the chart
+            $('form').on('submit', function(event){
+                $.ajax({
+                    data : {
+                        journal : $('#journalInput').val()
+                    },
+                    type : 'POST',
+                    url : '/analyze'
+                })
+                .done(function(data){
+                    $('.results').empty(); // Clear previous results
+                    if(emotionChart){ // If a chart already exists, destroy it
+                        emotionChart.destroy();
+                    }
+                    var emotionData = [];
+                    var totalScore = 0;
+                    $.each(data.sentiments, function(emotion, score){
+                        totalScore += score; // Sum up all scores
+                        emotionData.push({emotion: emotion.toUpperCase(), score: score});
+                    });
+
+                    // Normalize scores to total to 100
+                    emotionData = emotionData.map(function(data){
+                        return {emotion: data.emotion, score: (data.score / totalScore) * 100};
+                    });
+                    
+                    // Sort the emotions based on score in descending order
+                    emotionData.sort(function(a, b){return b.score - a.score;});
+
+                    var emotions = emotionData.map(data => data.emotion);
+                    var scores = emotionData.map(data => data.score.toFixed(2)); // Scores are now percentages
+                    
+                    // Update results with sorted data
+                    $.each(emotionData, function(index, data){
+                        $('.results').append($('<div>').addClass('emotion').text(`${data.emotion}: ${data.score.toFixed(2)}%`));
+                    });
+
+                    // Chart rendering
+                    var ctx = document.getElementById('emotionChart').getContext('2d');
+                    emotionChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: emotions,
+                            datasets: [{
+                                label: 'Emotion Scores (%)',
+                                data: scores,
+                                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                                borderColor: 'rgba(0, 123, 255, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value, index, values) {
+                                            return value + '%'; // Add percentage sign to the y-axis labels
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+                event.preventDefault(); // Prevent default form submission
+            });
+        });
+    </script>
+  </head>
+  <body class="bg-bgcolor font-helvetica">
+    <div>
+      <nav class="bg-pink p-4">
+        <div class="container mx-auto flex justify-between">
+          <!-- Logo -->
+          <div>
+            <a href="#" class="text-white font-bold text-3xl">ThoughtTracker</a>
+          </div>
+          <!-- Navigation Links -->
+          <div class="flex space-x-16">
+            <a href="home" class="text-white hover:text-yellow font-bold text-2xl">Home</a>
+            <a href="analysis" class="text-white hover:text-yellow font-bold text-2xl">Analysis</a>
+            <a href="previous" class="text-white hover:text-yellow font-bold text-2xl">Previous Entries</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="grid grid-cols-2 divide-x divide-none">
+        <div class = "mx-auto">
+            <div class="mb-16"></div>
+            <div class="text-center bg-blue text-black p-4 ml-32 rounded-full w-64 h-22">
+                <p class="text-3xl"> Welcome!!!</p>
+            </div>
+            <p class="text-5xl mt-10 pt-10 pl-20 text-center">How are you feeling <br>today?</p>
+          <img class="object-contain h-48 w-96 mx-auto" src="{{ url_for('static', filename='emoji.png') }}" alt="Example Image">
+        </div>
+
+        <div class="pt-32 pl-32">
+            <form class="w-full max-w-sm">
+                <div class="mb-6">
+                  <div>
+                    <label class="text-3xl text-gray-500 md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+                      Title:
+                    </label>
+                  </div>
+                  <div>
+                    <input class="bg-gray-200 w-custom-144 appearance-none border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-white focus:bg-blue focus:border-purple-500" id="inline-title" type="text" placeholder="Short title here..">
+                  </div>
+                </div>
+                <div class="mb-6">
+                    <div>
+                        <label class="text-3xl text-gray-500 md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+                          Enter your entry:
+                        </label>
+                    </div>
+                  <div class="md:w-2/3">
+                    <textarea id="journalInput" name="journal"class="py-2 px-4 w-custom-144 h-96 focus:outline-white focus:bg-blue" placeholder="Your today's entry here..."></textarea>
+                  </div>
+                </div>
+               
+                <div>
+                  <input type="submit" value="Analyze" class="shadow bg-pink hover:bg-yellow text-white font-bold py-2 px-4 rounded" type="button">
+                    
+                </div>
+            </form>
+            <div class="content-wrapper">
+              <div class="results">
+                  <!-- Results will be updated here by JavaScript -->
+              </div>
+              <canvas id="emotionChart"></canvas>
+          </div>
+        </div>
+    </div>
+
+  </body>
+</html>
