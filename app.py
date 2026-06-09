@@ -14,10 +14,10 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 
 # Configure MySQL
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'  # Change this if your MySQL username is different
-app.config['MYSQL_PASSWORD'] = ''  # Enter your MySQL password here
-app.config['MYSQL_DB'] = 'journal'
+app.config['MYSQL_HOST'] = 'bnwrjwfx9hhttgw4d5fk-mysql.services.clever-cloud.com'
+app.config['MYSQL_USER'] = 'ulcdnwlnkjghvdwl'  # Change this if your MySQL username is different
+app.config['MYSQL_PASSWORD'] = '5hVB6qEUEfryKvld9CIZ'  # Enter your MySQL password here
+app.config['MYSQL_DB'] = 'bnwrjwfx9hhttgw4d5fk'
 mysql = MySQL(app)
 
 
