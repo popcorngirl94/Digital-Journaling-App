@@ -132,12 +132,12 @@ def weekly_analysis():
 
     # Process entries in batches of 7
     for i in range(0, len(entries), 7):
-        batch_entries = entries[i:i+7]
-        batch_texts = [entry[1] for entry in batch_entries]  # Assuming the text is in the second column
-        batch_emotions = [analyze_sentiment(text) for text in batch_texts]
-        combined_analysis.append(batch_emotions)
-        
-        return jsonify(combined_analysis)
+     batch_entries = entries[i:i+7]
+     batch_texts = [entry[1] for entry in batch_entries]
+     batch_emotions = [analyze_sentiment(text) for text in batch_texts]
+     combined_analysis.append(batch_emotions)
+
+    return jsonify(combined_analysis)
     
 
 @app.route("/previous")
