@@ -1,0 +1,13 @@
+# ML models
+*.h5
+*.pkl
+*.sav
+bert-model/
+
+# Python
+__pycache__/
+*.pyc
+
+# env
+venv/
+.env
